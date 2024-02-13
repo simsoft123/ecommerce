@@ -1,20 +1,54 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Platform} from 'react-native';
+// import styles from './styles'
+import HomeScreen from './src/screens/home/Homescreen'
+import DetailScreen from './src/screens/detail/DetailScreen'
+import AccountScreen from './src/screens/account/Accountscreen'
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { Ionicons } from '@expo/vector-icons';
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.AndroidSafeArea}>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({route})=>({
+            tabBarIcon: ({focused, size, color}) => {
+              let iconName;
+
+              if(route.name === 'Home'){
+                iconName = focused ? 'home' : 'home-outline'
+              }else if(route.name === 'Detail'){
+                iconName = focused ? 'pricetag' : 'pricetag-outline'
+              }if(route.name ==='Account'){
+                iconName = focused ? 'wallet' : 'wallet-outline'
+              }
+              return <Ionicons name={iconName} size={size} color={color}/>
+            }
+          })}
+          tabBarOptions={{
+            activeTintColor: 'blue',
+            inactiveTintColor: 'black'
+          }}
+        >
+          <Tab.Screen name='Home' component={HomeScreen} options={{title:'Welcome to shop'}}/>
+          <Tab.Screen name='Detail' component={DetailScreen} options={{title:'Product Detail'}}/>
+          <Tab.Screen name='Account' component={AccountScreen} options={{title:'Account'}}/>
+
+        </Tab.Navigator>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  AndroidSafeArea: {
+    Flex: 1,
+    backgroundColour: 'white',
+    paddingTop: Platform.OS==='android' ? 40 : 0
   },
 });
+    
